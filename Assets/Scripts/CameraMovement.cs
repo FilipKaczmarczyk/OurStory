@@ -1,3 +1,4 @@
+using GameInput;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,8 +15,6 @@ public class CameraMovement : MonoBehaviour
     private float _zoomValue;
     private bool _rotateButtonPressed;
     private Vector3 _mouseStartPosition;
-    
-    
     
     private void OnEnable()
     {

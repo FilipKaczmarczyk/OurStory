@@ -31,6 +31,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "UnitSelectionButton",
+                    "type": "Button",
+                    "id": "f69bb75f-fe11-42df-9709-7f8148cdb992",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -108,6 +117,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "CameraRotateButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1d2b3c9c-8dbe-4919-bf7d-dc5c3cb83e7f",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UnitSelectionButton",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
