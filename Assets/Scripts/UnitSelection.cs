@@ -8,28 +8,30 @@ public class UnitSelection : MonoBehaviour
     public static readonly HashSet<SelectableUnit> AvailableUnits = new HashSet<SelectableUnit>();
     
     [SerializeField] private RectTransform selectionBox;
-    [SerializeField] private float dragDelay = 0.01f;
     
     private bool _selectionButtonPressed;
+    private bool _multiSelectionButtonPressed;
     
     private Vector3 _mouseStartPosition;
-    private float _mouseDownTime;
+    private bool _dragSelection;
 
     private RaycastHit _hit;
 
     private readonly HashSet<SelectableUnit> _selectedUnits = new HashSet<SelectableUnit>();
-    
-    private HashSet<SelectableUnit> _newlySelectedUnits = new HashSet<SelectableUnit>();
-    private HashSet<SelectableUnit> _deselectedUnits = new HashSet<SelectableUnit>();
+
+    private readonly HashSet<SelectableUnit> _newSelectedUnits = new HashSet<SelectableUnit>();
+    private readonly HashSet<SelectableUnit> _newDeselectedUnits = new HashSet<SelectableUnit>();
 
     private void OnEnable()
     {
         InputReader.UnitSelectionButtonEvent += HandleSelection;
+        InputReader.MultiSelectionButtonEvent += HandleMultiSelection;
     }
     
     private void OnDisable()
     {
         InputReader.UnitSelectionButtonEvent -= HandleSelection;
+        InputReader.MultiSelectionButtonEvent -= HandleMultiSelection;
     }
     
     private void HandleSelection(InputAction.CallbackContext context)
@@ -41,7 +43,6 @@ public class UnitSelection : MonoBehaviour
             _mouseStartPosition = Input.mousePosition;
             selectionBox.sizeDelta = Vector2.zero;
             selectionBox.gameObject.SetActive(true);
-            _mouseDownTime = Time.time;
         }
         
         if (context.phase == InputActionPhase.Canceled)
@@ -50,46 +51,50 @@ public class UnitSelection : MonoBehaviour
             
             selectionBox.sizeDelta = Vector2.zero;
             selectionBox.gameObject.SetActive(false);
-            
-            foreach (var newUnit in _newlySelectedUnits)
+
+            if (!_dragSelection)
             {
-                SelectUnit(newUnit);
-            }
-            
-            foreach (var deselectedUnit in _deselectedUnits)
-            {
-                DeselectUnit(deselectedUnit);
-            }
-            
-            _newlySelectedUnits.Clear();
-            _deselectedUnits.Clear();
-            
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var hit)
-                && hit.collider.TryGetComponent<SelectableUnit>(out var unit))
-            {
-                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                var ray = Camera.main.ScreenPointToRay(_mouseStartPosition);
+
+                if (Physics.Raycast(ray, out _hit, Mathf.Infinity) && _hit.collider.TryGetComponent<SelectableUnit>(out var unit)) 
                 {
-                    if (IsSelected(unit))
+                    if (_multiSelectionButtonPressed)
                     {
-                        DeselectUnit(unit);
+                        if (IsSelected(unit))
+                        {
+                            DeselectUnit(unit);
+                        }
+                        else
+                        {
+                            SelectUnit(unit);
+                        }
                     }
-                    else
+                    else 
                     {
+                        DeselectAll();
                         SelectUnit(unit);
                     }
                 }
-                else
+                else 
                 {
                     DeselectAll();
-                    SelectUnit(unit);
                 }
             }
-            else if (_mouseDownTime + dragDelay > Time.time)
-            {
-                DeselectAll();
-            }
 
-            _mouseDownTime = 0;
+            _dragSelection = false;
+        }
+    }
+
+    private void HandleMultiSelection(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Performed)
+        {
+            _multiSelectionButtonPressed = true;
+        }
+
+        if (context.phase == InputActionPhase.Canceled)
+        {
+            _multiSelectionButtonPressed = false;
         }
     }
 
@@ -124,8 +129,11 @@ public class UnitSelection : MonoBehaviour
     {
         if (!_selectionButtonPressed)
             return;
-        
-        if (_mouseDownTime + dragDelay >= Time.time)
+
+        if ((_mouseStartPosition - Input.mousePosition).magnitude > 40)
+            _dragSelection = true;
+
+        if (!_dragSelection)
             return;
 
         ResizeSelectionBox();
@@ -143,19 +151,34 @@ public class UnitSelection : MonoBehaviour
 
         foreach (var availableUnit in AvailableUnits)
         {
-            if (UnitIsInSelectionBox(Camera.main.WorldToScreenPoint(availableUnit.transform.position), bounds))
+            if (_multiSelectionButtonPressed) 
             {
-                if (!IsSelected(availableUnit))
+                if (UnitIsInSelectionBox(Camera.main.WorldToScreenPoint(availableUnit.transform.position), bounds))
                 {
-                    _newlySelectedUnits.Add(availableUnit);
-                }
+                    if (IsSelected(availableUnit)) 
+                    {
+                        // TO DO
 
-                _deselectedUnits.Remove(availableUnit);
+                        DeselectUnit(availableUnit);
+                    }
+                    else 
+                    {
+                        // TO DO
+
+                        SelectUnit(availableUnit);
+                    }
+                }
             }
-            else
+            else 
             {
-                _deselectedUnits.Add(availableUnit);
-                _newlySelectedUnits.Remove(availableUnit);
+                if (UnitIsInSelectionBox(Camera.main.WorldToScreenPoint(availableUnit.transform.position), bounds))
+                {
+                    SelectUnit(availableUnit);
+                }
+                else
+                {
+                    DeselectUnit(availableUnit);
+                }
             }
         }
     }
