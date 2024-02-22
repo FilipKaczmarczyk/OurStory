@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using GameInput;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -18,6 +19,7 @@ public class UnitSelection : MonoBehaviour
     private RaycastHit _hit;
 
     private readonly HashSet<SelectableUnit> _selectedUnits = new HashSet<SelectableUnit>();
+    private readonly HashSet<SelectableUnit> _newlySelectedUnits = new HashSet<SelectableUnit>();
 
     private void OnEnable()
     {
@@ -66,10 +68,17 @@ public class UnitSelection : MonoBehaviour
                             SelectUnit(unit);
                         }
                     }
-                    else 
+                    else
                     {
-                        DeselectAll();
-                        SelectUnit(unit);
+                        if (IsOnlySelected(unit))
+                        {
+                            SelectAllUnits();
+                        }
+                        else
+                        {
+                            DeselectAll();
+                            SelectUnit(unit);
+                        }
                     }
                 }
                 else 
@@ -95,6 +104,24 @@ public class UnitSelection : MonoBehaviour
         }
     }
 
+    private bool AreAllSelected()
+    {
+        return AvailableUnits.All(IsSelected);
+    }
+
+    private bool IsOnlySelected(SelectableUnit unit)
+    {
+        return _selectedUnits.Contains(unit) && _selectedUnits.Count == 1;
+    }
+    
+    private void SelectAllUnits()
+    {
+        foreach(var unit in AvailableUnits)
+        {
+            SelectUnit(unit);
+        }
+    }
+    
     private void SelectUnit(SelectableUnit unit)
     {
         _selectedUnits.Add(unit);
@@ -152,16 +179,8 @@ public class UnitSelection : MonoBehaviour
             {
                 if (UnitIsInSelectionBox(Camera.main.WorldToScreenPoint(availableUnit.transform.position), bounds))
                 {
-                    if (IsSelected(availableUnit)) 
+                    if (!IsSelected(availableUnit)) 
                     {
-                        // TO DO
-
-                        DeselectUnit(availableUnit);
-                    }
-                    else 
-                    {
-                        // TO DO
-
                         SelectUnit(availableUnit);
                     }
                 }
