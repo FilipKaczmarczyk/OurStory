@@ -19,9 +19,6 @@ public class UnitSelection : MonoBehaviour
 
     private readonly HashSet<SelectableUnit> _selectedUnits = new HashSet<SelectableUnit>();
 
-    private readonly HashSet<SelectableUnit> _newSelectedUnits = new HashSet<SelectableUnit>();
-    private readonly HashSet<SelectableUnit> _newDeselectedUnits = new HashSet<SelectableUnit>();
-
     private void OnEnable()
     {
         InputReader.UnitSelectionButtonEvent += HandleSelection;

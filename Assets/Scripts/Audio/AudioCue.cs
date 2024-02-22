@@ -1,6 +1,5 @@
-using System;
+using Audio;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 [CreateAssetMenu(menuName = "Audio/Audio Cue")]
 public class AudioCueSO : ScriptableObject
