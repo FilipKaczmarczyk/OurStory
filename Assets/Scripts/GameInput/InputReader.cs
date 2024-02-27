@@ -20,12 +20,18 @@ namespace GameInput
                 _playerInputActions.Player.Enable();
             }
         }
-
+        
+        // CAMERA MOVEMENT
         public static event Action<Vector2> CameraMoveEvent;
         public static event Action<float> CameraZoomEvent;
         public static event Action<InputAction.CallbackContext> CameraRotateButtonEvent;
+        
+        // SELECTION
         public static event Action<InputAction.CallbackContext> UnitSelectionButtonEvent;
         public static event Action<InputAction.CallbackContext> MultiSelectionButtonEvent;
+        
+        // UNIT ACTION
+        public static event Action<InputAction.CallbackContext> ActionButtonEvent;
 
         public void OnCameraMove(InputAction.CallbackContext context)
         {
@@ -50,6 +56,11 @@ namespace GameInput
         public void OnMultiSelectionButton(InputAction.CallbackContext context)
         {
             MultiSelectionButtonEvent?.Invoke(context);
+        }
+
+        public void OnActionButton(InputAction.CallbackContext context)
+        {
+            ActionButtonEvent?.Invoke(context);
         }
     }
 }

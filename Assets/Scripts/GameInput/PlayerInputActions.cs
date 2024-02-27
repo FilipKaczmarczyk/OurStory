@@ -71,6 +71,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ActionButton"",
+                    ""type"": ""Button"",
+                    ""id"": ""f6e533f4-1024-443b-bd62-b91836648417"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -172,6 +181,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""MultiSelectionButton"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""215a8505-b8a6-417f-90a1-9c46c2c2affc"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ActionButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -185,6 +205,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_CameraRotateButton = m_Player.FindAction("CameraRotateButton", throwIfNotFound: true);
         m_Player_UnitSelectionButton = m_Player.FindAction("UnitSelectionButton", throwIfNotFound: true);
         m_Player_MultiSelectionButton = m_Player.FindAction("MultiSelectionButton", throwIfNotFound: true);
+        m_Player_ActionButton = m_Player.FindAction("ActionButton", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -251,6 +272,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_CameraRotateButton;
     private readonly InputAction m_Player_UnitSelectionButton;
     private readonly InputAction m_Player_MultiSelectionButton;
+    private readonly InputAction m_Player_ActionButton;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -260,6 +282,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @CameraRotateButton => m_Wrapper.m_Player_CameraRotateButton;
         public InputAction @UnitSelectionButton => m_Wrapper.m_Player_UnitSelectionButton;
         public InputAction @MultiSelectionButton => m_Wrapper.m_Player_MultiSelectionButton;
+        public InputAction @ActionButton => m_Wrapper.m_Player_ActionButton;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -284,6 +307,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @MultiSelectionButton.started += instance.OnMultiSelectionButton;
             @MultiSelectionButton.performed += instance.OnMultiSelectionButton;
             @MultiSelectionButton.canceled += instance.OnMultiSelectionButton;
+            @ActionButton.started += instance.OnActionButton;
+            @ActionButton.performed += instance.OnActionButton;
+            @ActionButton.canceled += instance.OnActionButton;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -303,6 +329,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @MultiSelectionButton.started -= instance.OnMultiSelectionButton;
             @MultiSelectionButton.performed -= instance.OnMultiSelectionButton;
             @MultiSelectionButton.canceled -= instance.OnMultiSelectionButton;
+            @ActionButton.started -= instance.OnActionButton;
+            @ActionButton.performed -= instance.OnActionButton;
+            @ActionButton.canceled -= instance.OnActionButton;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -327,5 +356,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnCameraRotateButton(InputAction.CallbackContext context);
         void OnUnitSelectionButton(InputAction.CallbackContext context);
         void OnMultiSelectionButton(InputAction.CallbackContext context);
+        void OnActionButton(InputAction.CallbackContext context);
     }
 }
