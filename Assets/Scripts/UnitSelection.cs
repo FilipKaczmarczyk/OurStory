@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using GameInput;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,6 +8,8 @@ public class UnitSelection : MonoBehaviour
     public static readonly HashSet<SelectableUnit> AvailableUnits = new HashSet<SelectableUnit>();
     
     [SerializeField] private RectTransform selectionBox;
+
+    private const int MinDragDistance = 40;
     
     private bool _selectionButtonPressed;
     private bool _multiSelectionButtonPressed;
@@ -17,9 +18,14 @@ public class UnitSelection : MonoBehaviour
     private bool _dragSelection;
 
     private RaycastHit _hit;
+    private Camera _camera;
 
     private readonly HashSet<SelectableUnit> _selectedUnits = new HashSet<SelectableUnit>();
-    private readonly HashSet<SelectableUnit> _newlySelectedUnits = new HashSet<SelectableUnit>();
+
+    private void Awake()
+    {
+        _camera = Camera.main;
+    }
 
     private void OnEnable()
     {
@@ -53,38 +59,7 @@ public class UnitSelection : MonoBehaviour
 
             if (!_dragSelection)
             {
-                var ray = Camera.main.ScreenPointToRay(_mouseStartPosition);
-
-                if (Physics.Raycast(ray, out _hit, Mathf.Infinity) && _hit.collider.TryGetComponent<SelectableUnit>(out var unit)) 
-                {
-                    if (_multiSelectionButtonPressed)
-                    {
-                        if (IsSelected(unit))
-                        {
-                            DeselectUnit(unit);
-                        }
-                        else
-                        {
-                            SelectUnit(unit);
-                        }
-                    }
-                    else
-                    {
-                        if (IsOnlySelected(unit))
-                        {
-                            SelectAllUnits();
-                        }
-                        else
-                        {
-                            DeselectAll();
-                            SelectUnit(unit);
-                        }
-                    }
-                }
-                else 
-                {
-                    DeselectAll();
-                }
+                SelectUnitUnderMouse();
             }
 
             _dragSelection = false;
@@ -104,9 +79,40 @@ public class UnitSelection : MonoBehaviour
         }
     }
 
-    private bool AreAllSelected()
+    private void SelectUnitUnderMouse()
     {
-        return AvailableUnits.All(IsSelected);
+        var ray = _camera.ScreenPointToRay(_mouseStartPosition);
+
+        if (Physics.Raycast(ray, out _hit, Mathf.Infinity) && _hit.collider.TryGetComponent<SelectableUnit>(out var unit)) 
+        {
+            if (_multiSelectionButtonPressed)
+            {
+                if (IsSelected(unit))
+                {
+                    DeselectUnit(unit);
+                }
+                else
+                {
+                    SelectUnit(unit);
+                }
+            }
+            else
+            {
+                if (IsOnlySelected(unit))
+                {
+                    SelectAllUnits();
+                }
+                else
+                {
+                    DeselectAll();
+                    SelectUnit(unit);
+                }
+            }
+        }
+        else 
+        {
+            DeselectAll();
+        }
     }
 
     private bool IsOnlySelected(SelectableUnit unit)
@@ -154,7 +160,7 @@ public class UnitSelection : MonoBehaviour
         if (!_selectionButtonPressed)
             return;
 
-        if ((_mouseStartPosition - Input.mousePosition).magnitude > 40)
+        if ((_mouseStartPosition - Input.mousePosition).magnitude > MinDragDistance)
             _dragSelection = true;
 
         if (!_dragSelection)
@@ -177,17 +183,14 @@ public class UnitSelection : MonoBehaviour
         {
             if (_multiSelectionButtonPressed) 
             {
-                if (UnitIsInSelectionBox(Camera.main.WorldToScreenPoint(availableUnit.transform.position), bounds))
+                if (IsUnitInSelectionBox(_camera.WorldToScreenPoint(availableUnit.transform.position), bounds) && !IsSelected(availableUnit))
                 {
-                    if (!IsSelected(availableUnit)) 
-                    {
                         SelectUnit(availableUnit);
-                    }
                 }
             }
             else 
             {
-                if (UnitIsInSelectionBox(Camera.main.WorldToScreenPoint(availableUnit.transform.position), bounds))
+                if (IsUnitInSelectionBox(_camera.WorldToScreenPoint(availableUnit.transform.position), bounds))
                 {
                     SelectUnit(availableUnit);
                 }
@@ -199,7 +202,7 @@ public class UnitSelection : MonoBehaviour
         }
     }
     
-    private bool UnitIsInSelectionBox(Vector2 position, Bounds bounds)
+    private static bool IsUnitInSelectionBox(Vector2 position, Bounds bounds)
     {
         return position.x > bounds.min.x && position.x < bounds.max.x &&
                position.y > bounds.min.y && position.y < bounds.max.y;
