@@ -1,52 +1,100 @@
-using GameInput;
+using System;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.InputSystem;
 
 public class MovableUnit : SelectableUnit
 {
+    private enum State
+    {
+        Idle,
+        Move,
+        Animation,
+    }
+    
     private NavMeshAgent _navMeshAgent;
-    private Camera _camera;
-    private RaycastHit _hit;
-    private LayerMask _layerMask;
+    private Animator _animator;
+    private UnitHoldingItemManager _unitHoldingItemManager;
+    
+    private static readonly int Moving = Animator.StringToHash("isMoving");
+    private static readonly int Cut = Animator.StringToHash("Cut");
+    private static readonly int HoldingResources = Animator.StringToHash("HoldingResources");
+    
+    private float _arrivalDistance = 1.2f;
+
+    private Vector3 _targetPosition;
+    private Action _nextAction;
+
+    private State _currentState;
+
+    private bool _holdingResources;
     
     protected override void Awake()
     {
         base.Awake();
 
-        _camera = Camera.main;
-        _layerMask = LayerMask.GetMask("Ground");
         _navMeshAgent = GetComponent<NavMeshAgent>();
-    }
-    
-    private void OnEnable()
-    {
-        InputReader.ActionButtonEvent += HandleAction;
-    }
-    
-    private void OnDisable()
-    {
-        InputReader.ActionButtonEvent -= HandleAction;
+        _animator = GetComponent<Animator>();
+        _unitHoldingItemManager = GetComponent<UnitHoldingItemManager>();
     }
 
-    private void HandleAction(InputAction.CallbackContext context)
+    private void Start()
     {
-        if (context.phase == InputActionPhase.Performed)
+        _currentState = State.Idle;
+    }
+
+    private void Update()
+    {
+        if (_currentState != State.Move)
+            return;
+
+        Debug.Log((transform.position - _targetPosition).magnitude);
+        
+        if ((transform.position - _targetPosition).magnitude <= _arrivalDistance)
         {
-            var ray = _camera.ScreenPointToRay(Input.mousePosition);
+            _navMeshAgent.ResetPath();
+            _animator.SetBool(Moving, false);
+            _currentState = State.Idle;
 
-            if (Physics.Raycast(ray, out _hit, Mathf.Infinity, _layerMask))
-            {
-                Move(_hit.point);
-            }
+            _nextAction?.Invoke();
         }
     }
 
-    private void Move(Vector3 destination)
+    public void Move(Vector3 destination, float arrivalDistance = 0.1f, Action callbackAction = null)
     {
-        if (!_selected)
-            return;
-        
+        _arrivalDistance = arrivalDistance;
+        _targetPosition = destination;
+        _animator.SetBool(Moving, true);
+
+        _animator.SetBool(HoldingResources, _holdingResources);
+
         _navMeshAgent.SetDestination(destination);
+        _currentState = State.Move;
+        _nextAction = callbackAction;
+    }
+
+    public void PlayAnimation(Action callbackAction = null)
+    {
+        _animator.SetTrigger(Cut);
+        _currentState = State.Animation;
+        _nextAction = callbackAction;
+    }
+    
+    public void EndAnimation()
+    {
+        _currentState = State.Idle;
+        
+        _nextAction?.Invoke();
+    }
+
+    public void ChangeHoldingItem(Item.ItemType itemType)
+    {
+        _unitHoldingItemManager.ChangeHoldingItem(itemType);
+
+        _holdingResources = itemType == Item.ItemType.Wood;
+    }
+    
+    public bool IsIdle()
+    {
+        return _currentState == State.Idle;
     }
 }

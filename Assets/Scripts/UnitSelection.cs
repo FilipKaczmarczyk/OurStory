@@ -185,7 +185,7 @@ public class UnitSelection : MonoBehaviour
             {
                 if (IsUnitInSelectionBox(_camera.WorldToScreenPoint(availableUnit.transform.position), bounds) && !IsSelected(availableUnit))
                 {
-                        SelectUnit(availableUnit);
+                    SelectUnit(availableUnit);
                 }
             }
             else 

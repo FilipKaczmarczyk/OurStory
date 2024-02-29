@@ -31,7 +31,7 @@ namespace GameInput
         public static event Action<InputAction.CallbackContext> MultiSelectionButtonEvent;
         
         // UNIT ACTION
-        public static event Action<InputAction.CallbackContext> ActionButtonEvent;
+        public static event Action ActionButtonEvent;
 
         public void OnCameraMove(InputAction.CallbackContext context)
         {
@@ -60,7 +60,10 @@ namespace GameInput
 
         public void OnActionButton(InputAction.CallbackContext context)
         {
-            ActionButtonEvent?.Invoke(context);
+            if (context.phase == InputActionPhase.Performed)
+            {
+                ActionButtonEvent?.Invoke();
+            }
         }
     }
 }

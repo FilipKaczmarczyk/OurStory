@@ -5,22 +5,27 @@ public class SelectableUnit : MonoBehaviour
 {
     [SerializeField] private Image selectionCircle;
 
-    protected bool _selected;
+    public bool IsSelected { get; private set; }
     
     protected virtual void Awake()
     {
         UnitSelection.AvailableUnits.Add(this);
     }
+    
+    private void OnDestroy()
+    {
+        UnitSelection.AvailableUnits.Remove(this);
+    }
 
     public void Select()
     {
-        _selected = true;
+        IsSelected = true;
         selectionCircle.enabled = true;
     }
     
     public void Deselect()
     {
-        _selected = false;
+        IsSelected = false;
         selectionCircle.enabled = false;
     }
 }
