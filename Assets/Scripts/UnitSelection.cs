@@ -29,13 +29,13 @@ public class UnitSelection : MonoBehaviour
 
     private void OnEnable()
     {
-        InputReader.UnitSelectionButtonEvent += HandleSelection;
+        InputReader.SelectUnitEvent += HandleSelection;
         InputReader.MultiSelectionButtonEvent += HandleMultiSelection;
     }
     
     private void OnDisable()
     {
-        InputReader.UnitSelectionButtonEvent -= HandleSelection;
+        InputReader.SelectUnitEvent -= HandleSelection;
         InputReader.MultiSelectionButtonEvent -= HandleMultiSelection;
     }
     

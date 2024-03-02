@@ -24,15 +24,15 @@ public class UnitInput : MonoBehaviour
 
     private void OnEnable()
     {
-        InputReader.ActionButtonEvent += HandleAction;
+        InputReader.GiveUnitOrderEvent += HandleGiveUnitOrder;
     }
     
     private void OnDisable()
     {
-        InputReader.ActionButtonEvent -= HandleAction;
+        InputReader.GiveUnitOrderEvent -= HandleGiveUnitOrder;
     }
     
-    private void HandleAction()
+    private void HandleGiveUnitOrder()
     {
         if (!_movableUnit.IsSelected)
             return;

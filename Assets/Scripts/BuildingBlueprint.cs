@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using GameInput;
 using UnityEngine;
 
 public class BuildingBlueprint : MonoBehaviour
@@ -5,78 +7,85 @@ public class BuildingBlueprint : MonoBehaviour
     [SerializeField] private GameObject building;
     [SerializeField] private BuildingBlueprintVisual blueprintVisual;
 
-    private bool _canBuild = true;
-    private Vector3 _blueprintColliderSize;
-    
-    private readonly Vector3 _pivotOffset = new Vector3(0, 0.5f, 0);
+    private Camera _camera;
 
-    private Color _canBuildColor = new Color(0, 1, 0, 0.5f);
-    private Color _cantBuildColor = new Color(1, 0, 0, 0.5f);
+    private readonly HashSet<Collider> _overlappingColliders = new();
+    private RaycastHit _hit;
+
+    private LayerMask _buildingLayerMask;
     
-    private readonly Collider[] _overlappingColliders = new Collider[1];
+    private bool _isReadyToBuild = true;
+    private bool IsReadyToBuild
+    { 
+        set
+        {
+            if (_isReadyToBuild == value)
+                return;
+
+            _isReadyToBuild = value;
+            blueprintVisual.UpdateColor(value);
+        }
+    }
     
     private void Awake()
     {
-        _blueprintColliderSize = GetComponent<BoxCollider>().size;
+        _buildingLayerMask = LayerMask.GetMask("Ground");
+        _camera = Camera.main;
     }
 
+    private void OnEnable()
+    {
+        InputReader.BuildConfirmEvent += TryBuild;
+    }
+
+    private void OnDisable()
+    {
+        InputReader.BuildConfirmEvent -= TryBuild;
+    }
+
+    private void TryBuild()
+    {
+        if (!_isReadyToBuild)
+            return;
+        
+        BuildFromBlueprint();
+        
+        Destroy(gameObject);
+    }
+    
     private void Update()
     {
-        MoveToMouse();
+        UpdatePositionToCursor();
+    }
+
+    private void UpdatePositionToCursor()
+    {
+        var ray = _camera.ScreenPointToRay(Input.mousePosition);
         
-        CheckCollision();
-
-        if (Input.GetMouseButtonDown(0))
+        if (Physics.Raycast(ray, out _hit, Mathf.Infinity, _buildingLayerMask))
         {
-            if (!_canBuild)
-                return;
-            
-            Build();
-            Destroy(gameObject);
+            transform.position = _hit.point;
         }
     }
-
-    private void MoveToMouse()
+    
+    private void BuildFromBlueprint()
     {
-        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
+        var transformCached = transform;
+        Instantiate(building, transformCached.position, transformCached.rotation);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        _overlappingColliders.Add(other);
+
+        IsReadyToBuild = false;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (!_overlappingColliders.Contains(other)) return;
         
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Ground")))
-        {
-            transform.position = hit.point;
-        }
-    }
-
-    private void CheckCollision()
-    {
-        var size = Physics.OverlapBoxNonAlloc(transform.position + _pivotOffset, _blueprintColliderSize / 2f, 
-            _overlappingColliders, Quaternion.identity, LayerMask.GetMask("Building")); 
-
-        if (size == 0 || _overlappingColliders[0] == null)
-        {
-            if (!_canBuild)
-            {
-                UpdateBuildStatus(true);
-            }
-            
-            return;
-        }
-
-        if (_canBuild)
-        {
-            UpdateBuildStatus(false);
-        }
-    }
-
-    private void UpdateBuildStatus(bool canBuild)
-    {
-        _canBuild = canBuild;
-        
-        blueprintVisual.UpdateColor(_canBuild ? _canBuildColor : _cantBuildColor);
-    }
-
-    private void Build()
-    {
-        Instantiate(building, transform.position, transform.rotation);
+        _overlappingColliders.Remove(other);
+        IsReadyToBuild = _overlappingColliders.Count == 0;
     }
 }

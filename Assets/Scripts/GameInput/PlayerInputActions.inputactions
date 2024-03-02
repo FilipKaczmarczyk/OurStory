@@ -33,7 +33,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "UnitSelectionButton",
+                    "name": "SelectUnit",
                     "type": "Button",
                     "id": "f69bb75f-fe11-42df-9709-7f8148cdb992",
                     "expectedControlType": "Button",
@@ -51,9 +51,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "ActionButton",
+                    "name": "GiveUnitOrder",
                     "type": "Button",
                     "id": "f6e533f4-1024-443b-bd62-b91836648417",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "BuildConfirm",
+                    "type": "Button",
+                    "id": "903e3b43-7b9d-42dc-9c42-cb5eea25828e",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -145,7 +154,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "UnitSelectionButton",
+                    "action": "SelectUnit",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -167,7 +176,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ActionButton",
+                    "action": "GiveUnitOrder",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3f8d0c93-2f20-47b7-b7c8-4e32b6973b92",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "BuildConfirm",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

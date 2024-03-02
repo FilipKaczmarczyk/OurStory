@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9119788246055027732}
   - component: {fileID: 5304031809982470911}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: WoodStorage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57,7 +57,7 @@ GameObject:
   - component: {fileID: 1588792374073439501}
   - component: {fileID: 5441576139068076495}
   - component: {fileID: 120379905720657543}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: WoodStorageVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}

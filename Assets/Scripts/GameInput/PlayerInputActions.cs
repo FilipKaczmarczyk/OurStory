@@ -55,7 +55,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""UnitSelectionButton"",
+                    ""name"": ""SelectUnit"",
                     ""type"": ""Button"",
                     ""id"": ""f69bb75f-fe11-42df-9709-7f8148cdb992"",
                     ""expectedControlType"": ""Button"",
@@ -73,9 +73,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ActionButton"",
+                    ""name"": ""GiveUnitOrder"",
                     ""type"": ""Button"",
                     ""id"": ""f6e533f4-1024-443b-bd62-b91836648417"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""BuildConfirm"",
+                    ""type"": ""Button"",
+                    ""id"": ""903e3b43-7b9d-42dc-9c42-cb5eea25828e"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -167,7 +176,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""UnitSelectionButton"",
+                    ""action"": ""SelectUnit"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -189,7 +198,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ActionButton"",
+                    ""action"": ""GiveUnitOrder"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3f8d0c93-2f20-47b7-b7c8-4e32b6973b92"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""BuildConfirm"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -203,9 +223,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_CameraMove = m_Player.FindAction("CameraMove", throwIfNotFound: true);
         m_Player_CameraZoom = m_Player.FindAction("CameraZoom", throwIfNotFound: true);
         m_Player_CameraRotateButton = m_Player.FindAction("CameraRotateButton", throwIfNotFound: true);
-        m_Player_UnitSelectionButton = m_Player.FindAction("UnitSelectionButton", throwIfNotFound: true);
+        m_Player_SelectUnit = m_Player.FindAction("SelectUnit", throwIfNotFound: true);
         m_Player_MultiSelectionButton = m_Player.FindAction("MultiSelectionButton", throwIfNotFound: true);
-        m_Player_ActionButton = m_Player.FindAction("ActionButton", throwIfNotFound: true);
+        m_Player_GiveUnitOrder = m_Player.FindAction("GiveUnitOrder", throwIfNotFound: true);
+        m_Player_BuildConfirm = m_Player.FindAction("BuildConfirm", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -270,9 +291,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_CameraMove;
     private readonly InputAction m_Player_CameraZoom;
     private readonly InputAction m_Player_CameraRotateButton;
-    private readonly InputAction m_Player_UnitSelectionButton;
+    private readonly InputAction m_Player_SelectUnit;
     private readonly InputAction m_Player_MultiSelectionButton;
-    private readonly InputAction m_Player_ActionButton;
+    private readonly InputAction m_Player_GiveUnitOrder;
+    private readonly InputAction m_Player_BuildConfirm;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -280,9 +302,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @CameraMove => m_Wrapper.m_Player_CameraMove;
         public InputAction @CameraZoom => m_Wrapper.m_Player_CameraZoom;
         public InputAction @CameraRotateButton => m_Wrapper.m_Player_CameraRotateButton;
-        public InputAction @UnitSelectionButton => m_Wrapper.m_Player_UnitSelectionButton;
+        public InputAction @SelectUnit => m_Wrapper.m_Player_SelectUnit;
         public InputAction @MultiSelectionButton => m_Wrapper.m_Player_MultiSelectionButton;
-        public InputAction @ActionButton => m_Wrapper.m_Player_ActionButton;
+        public InputAction @GiveUnitOrder => m_Wrapper.m_Player_GiveUnitOrder;
+        public InputAction @BuildConfirm => m_Wrapper.m_Player_BuildConfirm;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -301,15 +324,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @CameraRotateButton.started += instance.OnCameraRotateButton;
             @CameraRotateButton.performed += instance.OnCameraRotateButton;
             @CameraRotateButton.canceled += instance.OnCameraRotateButton;
-            @UnitSelectionButton.started += instance.OnUnitSelectionButton;
-            @UnitSelectionButton.performed += instance.OnUnitSelectionButton;
-            @UnitSelectionButton.canceled += instance.OnUnitSelectionButton;
+            @SelectUnit.started += instance.OnSelectUnit;
+            @SelectUnit.performed += instance.OnSelectUnit;
+            @SelectUnit.canceled += instance.OnSelectUnit;
             @MultiSelectionButton.started += instance.OnMultiSelectionButton;
             @MultiSelectionButton.performed += instance.OnMultiSelectionButton;
             @MultiSelectionButton.canceled += instance.OnMultiSelectionButton;
-            @ActionButton.started += instance.OnActionButton;
-            @ActionButton.performed += instance.OnActionButton;
-            @ActionButton.canceled += instance.OnActionButton;
+            @GiveUnitOrder.started += instance.OnGiveUnitOrder;
+            @GiveUnitOrder.performed += instance.OnGiveUnitOrder;
+            @GiveUnitOrder.canceled += instance.OnGiveUnitOrder;
+            @BuildConfirm.started += instance.OnBuildConfirm;
+            @BuildConfirm.performed += instance.OnBuildConfirm;
+            @BuildConfirm.canceled += instance.OnBuildConfirm;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -323,15 +349,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @CameraRotateButton.started -= instance.OnCameraRotateButton;
             @CameraRotateButton.performed -= instance.OnCameraRotateButton;
             @CameraRotateButton.canceled -= instance.OnCameraRotateButton;
-            @UnitSelectionButton.started -= instance.OnUnitSelectionButton;
-            @UnitSelectionButton.performed -= instance.OnUnitSelectionButton;
-            @UnitSelectionButton.canceled -= instance.OnUnitSelectionButton;
+            @SelectUnit.started -= instance.OnSelectUnit;
+            @SelectUnit.performed -= instance.OnSelectUnit;
+            @SelectUnit.canceled -= instance.OnSelectUnit;
             @MultiSelectionButton.started -= instance.OnMultiSelectionButton;
             @MultiSelectionButton.performed -= instance.OnMultiSelectionButton;
             @MultiSelectionButton.canceled -= instance.OnMultiSelectionButton;
-            @ActionButton.started -= instance.OnActionButton;
-            @ActionButton.performed -= instance.OnActionButton;
-            @ActionButton.canceled -= instance.OnActionButton;
+            @GiveUnitOrder.started -= instance.OnGiveUnitOrder;
+            @GiveUnitOrder.performed -= instance.OnGiveUnitOrder;
+            @GiveUnitOrder.canceled -= instance.OnGiveUnitOrder;
+            @BuildConfirm.started -= instance.OnBuildConfirm;
+            @BuildConfirm.performed -= instance.OnBuildConfirm;
+            @BuildConfirm.canceled -= instance.OnBuildConfirm;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -354,8 +383,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnCameraMove(InputAction.CallbackContext context);
         void OnCameraZoom(InputAction.CallbackContext context);
         void OnCameraRotateButton(InputAction.CallbackContext context);
-        void OnUnitSelectionButton(InputAction.CallbackContext context);
+        void OnSelectUnit(InputAction.CallbackContext context);
         void OnMultiSelectionButton(InputAction.CallbackContext context);
-        void OnActionButton(InputAction.CallbackContext context);
+        void OnGiveUnitOrder(InputAction.CallbackContext context);
+        void OnBuildConfirm(InputAction.CallbackContext context);
     }
 }

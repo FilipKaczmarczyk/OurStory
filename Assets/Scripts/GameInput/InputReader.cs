@@ -27,12 +27,15 @@ namespace GameInput
         public static event Action<InputAction.CallbackContext> CameraRotateButtonEvent;
         
         // SELECTION
-        public static event Action<InputAction.CallbackContext> UnitSelectionButtonEvent;
+        public static event Action<InputAction.CallbackContext> SelectUnitEvent;
         public static event Action<InputAction.CallbackContext> MultiSelectionButtonEvent;
         
-        // UNIT ACTION
-        public static event Action ActionButtonEvent;
-
+        // UNIT
+        public static event Action GiveUnitOrderEvent;
+        
+        // BUILD
+        public static event Action BuildConfirmEvent;
+        
         public void OnCameraMove(InputAction.CallbackContext context)
         {
             CameraMoveEvent?.Invoke(context.ReadValue<Vector2>());
@@ -48,9 +51,9 @@ namespace GameInput
             CameraRotateButtonEvent?.Invoke(context);
         }
 
-        public void OnUnitSelectionButton(InputAction.CallbackContext context)
+        public void OnSelectUnit(InputAction.CallbackContext context)
         {
-            UnitSelectionButtonEvent?.Invoke(context);
+            SelectUnitEvent?.Invoke(context);
         }
 
         public void OnMultiSelectionButton(InputAction.CallbackContext context)
@@ -58,11 +61,19 @@ namespace GameInput
             MultiSelectionButtonEvent?.Invoke(context);
         }
 
-        public void OnActionButton(InputAction.CallbackContext context)
+        public void OnGiveUnitOrder(InputAction.CallbackContext context)
         {
             if (context.phase == InputActionPhase.Performed)
             {
-                ActionButtonEvent?.Invoke();
+                GiveUnitOrderEvent?.Invoke();
+            }
+        }
+
+        public void OnBuildConfirm(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Performed)
+            {
+                BuildConfirmEvent?.Invoke();
             }
         }
     }
