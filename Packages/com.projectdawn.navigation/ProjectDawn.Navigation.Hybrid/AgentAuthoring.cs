@@ -197,6 +197,11 @@ namespace ProjectDawn.Navigation.Hybrid
             EntityBody = body;
         }
 
+        public bool IsStopped()
+        {
+            return EntityBody.IsStopped;
+        }
+
         void Awake()
         {
             m_Entity = GetOrCreateEntity();

@@ -1,6 +1,8 @@
 using System;
+using ProjectDawn.Navigation.Hybrid;
+using ProjectDawn.Navigation.Sample.Zerg;
+using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class MovableUnit : SelectableUnit
 {
@@ -10,31 +12,35 @@ public class MovableUnit : SelectableUnit
         Move,
         Animation,
     }
+
+    [SerializeField] private Animator animator;
+    private UnitBrainSystem _unitBrainSystem;
     
-    private NavMeshAgent _navMeshAgent;
-    private Animator _animator;
-    private UnitHoldingItemManager _unitHoldingItemManager;
+    private AgentAuthoring _agentAuthoring;
+    private UnitHoldingWeaponManager _unitHoldingWeaponManager;
+    private UnitCarryingResourcesManager _unitCarryingResourcesManager;
     
-    private static readonly int Moving = Animator.StringToHash("isMoving");
-    private static readonly int Cut = Animator.StringToHash("Cut");
-    private static readonly int HoldingResources = Animator.StringToHash("HoldingResources");
+    private static readonly int Moving = Animator.StringToHash("moving");
+    private static readonly int Attack = Animator.StringToHash("attack");
     
-    private float _arrivalDistance = 1.2f;
+    private float _arrivalDistance;
 
     private Vector3 _targetPosition;
     private Action _nextAction;
 
     private State _currentState;
 
-    private bool _holdingResources;
+    private bool _gathering;
+    private AgentSmartStopAuthoring _agentSmartStop;
     
     protected override void Awake()
     {
         base.Awake();
 
-        _navMeshAgent = GetComponent<NavMeshAgent>();
-        _animator = GetComponent<Animator>();
-        _unitHoldingItemManager = GetComponent<UnitHoldingItemManager>();
+        _agentSmartStop = GetComponent<AgentSmartStopAuthoring>();
+        _agentAuthoring = GetComponent<AgentAuthoring>();
+        _unitHoldingWeaponManager = GetComponent<UnitHoldingWeaponManager>();
+        _unitCarryingResourcesManager = GetComponent<UnitCarryingResourcesManager>();
     }
 
     private void Start()
@@ -46,35 +52,56 @@ public class MovableUnit : SelectableUnit
     {
         if (_currentState != State.Move)
             return;
-
-        Debug.Log((transform.position - _targetPosition).magnitude);
         
-        if ((transform.position - _targetPosition).magnitude <= _arrivalDistance)
-        {
-            _navMeshAgent.ResetPath();
-            _animator.SetBool(Moving, false);
-            _currentState = State.Idle;
+        var v1XZ = new Vector2(transform.position.x, transform.position.z);
+        var v2XZ = new Vector2(_targetPosition.x, _targetPosition.z);
 
-            _nextAction?.Invoke();
+        var distancesq = Vector2.Distance(v1XZ, v2XZ);
+        
+        if (_gathering)
+        {
+            if (distancesq <= _arrivalDistance)
+            {
+                var q = Quaternion.LookRotation(_targetPosition - transform.position);
+                transform.rotation = q;
+                
+                _agentAuthoring.Stop();
+                animator.SetBool(Moving, false);
+                _currentState = State.Idle;
+
+                _nextAction?.Invoke();
+            }
+        }
+        else
+        {
+            if (_agentAuthoring.IsStopped())
+            {
+                _agentAuthoring.Stop();
+                animator.SetBool(Moving, false);
+                _currentState = State.Idle;
+
+                _nextAction?.Invoke();
+            }
         }
     }
 
-    public void Move(Vector3 destination, float arrivalDistance = 0.1f, Action callbackAction = null)
+    public void Move(Vector3 destination, float arrivalDistance = 0.1f, Action callbackAction = null, bool gathering = false)
     {
+        _gathering = gathering;
+        _agentSmartStop.enabled = !gathering;
+        
         _arrivalDistance = arrivalDistance;
         _targetPosition = destination;
-        _animator.SetBool(Moving, true);
+        animator.SetBool(Moving, true);
 
-        _animator.SetBool(HoldingResources, _holdingResources);
-
-        _navMeshAgent.SetDestination(destination);
+        _agentAuthoring.SetDestination(destination);
         _currentState = State.Move;
         _nextAction = callbackAction;
     }
 
     public void PlayAnimation(Action callbackAction = null)
     {
-        _animator.SetTrigger(Cut);
+        animator.SetTrigger(Attack);
         _currentState = State.Animation;
         _nextAction = callbackAction;
     }
@@ -86,11 +113,19 @@ public class MovableUnit : SelectableUnit
         _nextAction?.Invoke();
     }
 
-    public void ChangeHoldingItem(Item.ItemType itemType)
+    public void ChangeHoldingItem(WeaponType weaponType)
     {
-        _unitHoldingItemManager.ChangeHoldingItem(itemType);
+        _unitHoldingWeaponManager.ChangeHoldingItem(weaponType);
+    }
 
-        _holdingResources = itemType == Item.ItemType.Wood;
+    public void PickMaterial(BackpackType backpackType)
+    {
+        _unitCarryingResourcesManager.WearBackpack(backpackType);
+    }
+
+    public void DropMaterial()
+    {
+        _unitCarryingResourcesManager.TakeOffBackpack();
     }
     
     public bool IsIdle()

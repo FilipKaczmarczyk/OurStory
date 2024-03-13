@@ -360,6 +360,7 @@ GameObject:
   - component: {fileID: 2637028272645160362}
   - component: {fileID: 7088322232224251745}
   - component: {fileID: 2385725912420185335}
+  - component: {fileID: 2706103005646431980}
   m_Layer: 5
   m_Name: ResourcePanel
   m_TagString: Untagged
@@ -434,6 +435,20 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &2706103005646431980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6262043608335594442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb4a7f706721cd345b2cb069fd1619ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resource: {fileID: 0}
+  resourceCountText: {fileID: 7975835091514968559}
 --- !u!1 &7418372029828350469
 GameObject:
   m_ObjectHideFlags: 0
