@@ -1,22 +1,25 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-[CreateAssetMenu(fileName = "New Resource", menuName = "ScriptableObjects/New Resource")]
-public class ResourceSO : ScriptableObject
+namespace ScriptableObjects
 {
-    public UnityEvent<int> updateResourceCount = new UnityEvent<int>();
-    
-    [Header("Gathering")]
-    public WeaponType gatheringTool;
-    public BackpackType rawMaterial;
-
-    private int _resourceCount;
-
-    public void AddResource(int resourceToAdd)
+    [CreateAssetMenu(fileName = "New Resource", menuName = "ScriptableObjects/New Resource")]
+    public class ResourceSO : ScriptableObject
     {
-        _resourceCount += resourceToAdd;
+        public UnityEvent<int> updateResourceCount = new UnityEvent<int>();
+    
+        [Header("Gathering")]
+        public WeaponType gatheringTool;
+        public BackpackType rawMaterial;
 
-        updateResourceCount.Invoke(_resourceCount);
+        private int _resourceCount;
+
+        public void AddResource(int resourceToAdd)
+        {
+            _resourceCount += resourceToAdd;
+
+            updateResourceCount.Invoke(_resourceCount);
+        }
     }
 }
 

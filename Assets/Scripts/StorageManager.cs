@@ -1,28 +1,29 @@
 using System.Collections.Generic;
+using Buildings;
 using UnityEngine;
 
 public class StorageManager : MonoBehaviour
 {
-    public static readonly HashSet<WoodStorage> WoodStorages = new HashSet<WoodStorage>();
+    public static readonly HashSet<Storage> Storages = new HashSet<Storage>();
 
-    public static WoodStorage GetClosedWoodStorage(Transform targetPosition)
+    public static Storage GetClosedStorage(Transform targetPosition)
     {
-        WoodStorage closedWoodStorage = null;
+        Storage closedStorage = null;
         
-        foreach (var woodStorage in WoodStorages)
+        foreach (var storage in Storages)
         {
-            if (closedWoodStorage != null)
+            if (closedStorage != null)
             {
-                if ((woodStorage.transform.position - targetPosition.position).magnitude < (closedWoodStorage.transform.position - targetPosition.position).magnitude)
-                    closedWoodStorage = woodStorage;
+                if ((storage.transform.position - targetPosition.position).magnitude < (closedStorage.transform.position - targetPosition.position).magnitude)
+                    closedStorage = storage;
             }
             else
             {
-                closedWoodStorage = woodStorage;
+                closedStorage = storage;
             }
             
         }
 
-        return closedWoodStorage;
+        return closedStorage;
     }
 }

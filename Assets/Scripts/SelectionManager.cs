@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using GameInput;
+using Units;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class UnitSelection : MonoBehaviour
+public class SelectionManager : MonoBehaviour
 {
     public static readonly HashSet<SelectableUnit> AvailableUnits = new HashSet<SelectableUnit>();
     
