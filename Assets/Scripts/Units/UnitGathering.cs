@@ -102,10 +102,6 @@ namespace Units
                 {
                     _movableUnit.ChangeHoldingItem(targetResourceNode.GetGatheringTool());
                 }
-                else
-                {
-                    // To DO
-                }
             }
             else
             {

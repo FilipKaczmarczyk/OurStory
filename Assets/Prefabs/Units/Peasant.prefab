@@ -1606,6 +1606,7 @@ GameObject:
   - component: {fileID: 7698260310779245716}
   - component: {fileID: 3722544429977182764}
   - component: {fileID: 7387628149945729327}
+  - component: {fileID: 6495143153629930213}
   m_Layer: 0
   m_Name: Peasant
   m_TagString: Untagged
@@ -1819,6 +1820,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resourceHolder: {fileID: 2263333415441306321}
+--- !u!114 &6495143153629930213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 840572174352046961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60fc65c0d5ddb804598abbfc9643987d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &875107183147953583
 GameObject:
   m_ObjectHideFlags: 0
@@ -4579,6 +4592,7 @@ Transform:
   m_Children:
   - {fileID: 6453729511668387642}
   - {fileID: 9052671633221224845}
+  - {fileID: 4834248660819410306}
   - {fileID: 5179430166255136}
   - {fileID: 2702018177508417656}
   - {fileID: 4235714967530330804}
@@ -4594,7 +4608,6 @@ Transform:
   - {fileID: 1764057573304016895}
   - {fileID: 67336796958681266}
   - {fileID: 2112702873985465096}
-  - {fileID: 4834248660819410306}
   - {fileID: 7095361915090995018}
   - {fileID: 4292006957384601082}
   - {fileID: 2049169542872373413}
@@ -10396,7 +10409,7 @@ GameObject:
   - component: {fileID: 1406485892427108065}
   - component: {fileID: 7623253277160815777}
   m_Layer: 0
-  m_Name: w_hammer
+  m_Name: Hammer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10411,8 +10424,8 @@ Transform:
   m_GameObject: {fileID: 5031593928145314898}
   serializedVersion: 2
   m_LocalRotation: {x: 1.6486815e-14, y: -0.0000000614673, z: 0.00000026822093, w: 1}
-  m_LocalPosition: {x: 0.00000019378662, y: 0.0000007751465, z: 0.0000007266998}
-  m_LocalScale: {x: 0.99999994, y: 1.0000002, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4647934731067673985}

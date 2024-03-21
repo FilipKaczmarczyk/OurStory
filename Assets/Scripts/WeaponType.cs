@@ -1,6 +1,7 @@
 public enum WeaponType
 {
     Axe,
-    Pickaxe
+    Pickaxe,
+    Hammer
 }
 

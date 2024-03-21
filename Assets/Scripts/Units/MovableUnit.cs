@@ -57,11 +57,13 @@ namespace Units
             var v1XZ = new Vector2(transform.position.x, transform.position.z);
             var v2XZ = new Vector2(_targetPosition.x, _targetPosition.z);
 
-            var distancesq = Vector2.Distance(v1XZ, v2XZ);
+            var distance = Vector2.Distance(v1XZ, v2XZ);
         
             if (_gathering)
             {
-                if (distancesq <= _arrivalDistance)
+                Debug.Log(distance);
+                
+                if (distance <= _arrivalDistance)
                 {
                     var q = Quaternion.LookRotation(_targetPosition - transform.position);
                     transform.rotation = q;

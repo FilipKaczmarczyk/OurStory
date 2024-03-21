@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 758357800922133294}
   - component: {fileID: 7706283538951164444}
   - component: {fileID: 3923089112814181472}
+  - component: {fileID: 7073019111017330913}
   m_Layer: 7
   m_Name: Granary
   m_TagString: Untagged
@@ -120,6 +121,25 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 4.249703, y: 4.3323264, z: 6.4886694}
   m_Center: {x: -0.02809359, y: 0.04018258, z: 1.5932819}
+--- !u!114 &7073019111017330913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3136893620835020728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c077e39eaa5db584e820bbcc805301f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildingPhases:
+  - {fileID: 4300000, guid: b18013bceef29894d95932ffbdf069c0, type: 3}
+  - {fileID: 4300000, guid: 25ef05172876b8742b290e10ba4393cf, type: 3}
+  - {fileID: 4300002, guid: aec20226064bbcc4d850e8da90e49a4b, type: 3}
+  currentPhase: -1
+  buildPointsToComplete: 100
+  buildingDistance: 0.3
 --- !u!1 &4950777447626347619
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,7 +6,7 @@ namespace Buildings
 {
     public class BuildingBlueprint : MonoBehaviour
     {
-        [SerializeField] private GameObject building;
+        [SerializeField] private Building building;
         [SerializeField] private BuildingBlueprintVisual blueprintVisual;
 
         private Camera _camera;
@@ -58,6 +58,11 @@ namespace Buildings
         private void Update()
         {
             UpdatePositionToCursor();
+
+            foreach (var collider in _overlappingColliders)
+            {
+                Debug.Log(collider);
+            }
         }
 
         private void UpdatePositionToCursor()
