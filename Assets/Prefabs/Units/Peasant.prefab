@@ -1607,6 +1607,7 @@ GameObject:
   - component: {fileID: 3722544429977182764}
   - component: {fileID: 7387628149945729327}
   - component: {fileID: 6495143153629930213}
+  - component: {fileID: 3574968913314275635}
   m_Layer: 0
   m_Name: Peasant
   m_TagString: Untagged
@@ -1832,6 +1833,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60fc65c0d5ddb804598abbfc9643987d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!136 &3574968913314275635
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 840572174352046961}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.40369534
+  m_Height: 1.1325206
+  m_Direction: 1
+  m_Center: {x: -0.0030093193, y: 0.49836522, z: -0.005400896}
 --- !u!1 &875107183147953583
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace Units
 {
-    public class SelectableUnit : MonoBehaviour
+    public class SelectableUnit : MonoBehaviour, ISelectable
     {
         [SerializeField] private Image selectionCircle;
 
@@ -29,6 +29,16 @@ namespace Units
         {
             IsSelected = false;
             selectionCircle.enabled = false;
+        }
+
+        public string GetName()
+        {
+            return "Unit";
+        }
+
+        public void ShowOnUI()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

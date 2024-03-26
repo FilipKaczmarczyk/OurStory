@@ -1,15 +1,18 @@
 using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Buildings
 {
-    public class Building : MonoBehaviour
+    public class Building : MonoBehaviour, ISelectable
     {
         [SerializeField] private List<Mesh> buildingPhases;
         [SerializeField] private int currentPhase;
         [SerializeField] private int buildPointsToComplete;
         [SerializeField] private float buildingDistance;
+        
+        [SerializeField] private Image selectionCircle;
         
         private MeshFilter _meshFilter;
 
@@ -69,6 +72,21 @@ namespace Buildings
         public float GetBuildingDistance()
         {
             return buildingDistance;
+        }
+
+        public void Select()
+        {
+            selectionCircle.enabled = true;
+        }
+
+        public void Deselect()
+        {
+            selectionCircle.enabled = false;
+        }
+
+        public string GetName()
+        {
+            return "Building";
         }
     }
 }

@@ -95,20 +95,10 @@ namespace Units
         public void SetTargetResource(ResourceNode targetResourceNode)
         {
             _currentState = State.Idle;
-
-            if (_currentTargetResourceNode != null)
-            {
-                if (_currentTargetResourceNode.GetResource() != targetResourceNode.GetResource())
-                {
-                    _movableUnit.ChangeHoldingItem(targetResourceNode.GetGatheringTool());
-                }
-            }
-            else
-            {
-                _movableUnit.ChangeHoldingItem(targetResourceNode.GetGatheringTool());
-            }
         
             _currentTargetResourceNode = targetResourceNode;
+            
+            _movableUnit.ChangeHoldingItem(targetResourceNode.GetGatheringTool());
         }
     }
 }

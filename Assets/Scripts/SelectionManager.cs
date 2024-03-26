@@ -9,6 +9,7 @@ public class SelectionManager : MonoBehaviour
     public static readonly HashSet<SelectableUnit> AvailableUnits = new HashSet<SelectableUnit>();
     
     [SerializeField] private RectTransform selectionBox;
+    [SerializeField] private UISelectionPanel selectionPanel;
 
     private const int MinDragDistance = 40;
     
@@ -22,6 +23,7 @@ public class SelectionManager : MonoBehaviour
     private Camera _camera;
 
     private readonly HashSet<SelectableUnit> _selectedUnits = new HashSet<SelectableUnit>();
+    private ISelectable _singleSelectedObject;
 
     private void Awake()
     {
@@ -62,8 +64,22 @@ public class SelectionManager : MonoBehaviour
             {
                 SelectUnitUnderMouse();
             }
-
+            
             _dragSelection = false;
+
+            UpdateSelectionUI();
+        }
+    }
+
+    private void UpdateSelectionUI()
+    {
+        if (_singleSelectedObject != null)
+        {
+            selectionPanel.ShowSingleObject(_singleSelectedObject);
+        }
+        else
+        {
+            selectionPanel.UpdateSelection(_selectedUnits);
         }
     }
 
@@ -84,39 +100,57 @@ public class SelectionManager : MonoBehaviour
     {
         var ray = _camera.ScreenPointToRay(_mouseStartPosition);
 
-        if (Physics.Raycast(ray, out _hit, Mathf.Infinity) && _hit.collider.TryGetComponent<SelectableUnit>(out var unit)) 
+        if (Physics.Raycast(ray, out _hit, Mathf.Infinity) && _hit.collider.TryGetComponent<ISelectable>(out var selectable)) 
         {
-            if (_multiSelectionButtonPressed)
+            var unit = selectable as SelectableUnit;
+
+            if (unit != null)
             {
-                if (IsSelected(unit))
+                if (_multiSelectionButtonPressed)
                 {
-                    DeselectUnit(unit);
+                    ToggleUnitSelection(unit);
                 }
                 else
                 {
-                    SelectUnit(unit);
+                    if (IsOnlySelected(unit))
+                    {
+                        SelectAllUnits();
+                    }
+                    else
+                    {
+                        DeselectAllUnits();
+                        SelectUnit(unit);
+                    }
                 }
+
+                DeselectSingleObject();
             }
             else
             {
-                if (IsOnlySelected(unit))
-                {
-                    SelectAllUnits();
-                }
-                else
-                {
-                    DeselectAll();
-                    SelectUnit(unit);
-                }
+                SelectSingleObject(selectable);
+                DeselectAllUnits();
             }
         }
         else 
         {
-            DeselectAll();
+            DeselectAllUnits();
+            DeselectSingleObject();
         }
     }
 
-    private bool IsOnlySelected(SelectableUnit unit)
+    private void ToggleUnitSelection(SelectableUnit unit)
+    {
+        if (IsSelected(unit))
+        {
+            DeselectUnit(unit);
+        }
+        else
+        {
+            SelectUnit(unit);
+        }
+    }
+    
+    public bool IsOnlySelected(SelectableUnit unit)
     {
         return _selectedUnits.Contains(unit) && _selectedUnits.Count == 1;
     }
@@ -135,13 +169,13 @@ public class SelectionManager : MonoBehaviour
         unit.Select();
     }
 
-    private void DeselectUnit(SelectableUnit unit)
+    private void SelectSingleObject(ISelectable selectable)
     {
-        unit.Deselect();
-        _selectedUnits.Remove(unit);
+        selectable.Select();
+        _singleSelectedObject = selectable;
     }
 
-    private void DeselectAll()
+    private void DeselectAllUnits()
     {
         foreach (var selectedUnit in _selectedUnits)
         {
@@ -149,6 +183,21 @@ public class SelectionManager : MonoBehaviour
         }
         
         _selectedUnits.Clear();
+    }
+
+    private void DeselectSingleObject()
+    {
+        if (_singleSelectedObject != null)
+        {
+            _singleSelectedObject.Deselect();
+            _singleSelectedObject = null;
+        }
+    }
+    
+    private void DeselectUnit(SelectableUnit unit)
+    {
+        unit.Deselect();
+        _selectedUnits.Remove(unit);
     }
 
     private bool IsSelected(SelectableUnit unit)
@@ -162,8 +211,11 @@ public class SelectionManager : MonoBehaviour
             return;
 
         if ((_mouseStartPosition - Input.mousePosition).magnitude > MinDragDistance)
+        {
             _dragSelection = true;
-
+            DeselectSingleObject();
+        }
+        
         if (!_dragSelection)
             return;
 
