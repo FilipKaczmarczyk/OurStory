@@ -1,3 +1,4 @@
+using ScriptableObjects;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,6 +6,7 @@ namespace Units
 {
     public class SelectableUnit : MonoBehaviour, ISelectable
     {
+        [SerializeField] private UnitSO unit;
         [SerializeField] private Image selectionCircle;
 
         public bool IsSelected { get; private set; }
@@ -31,14 +33,34 @@ namespace Units
             selectionCircle.enabled = false;
         }
 
-        public string GetName()
+        public string GetUnitType()
         {
-            return "Unit";
+            return unit.type;
         }
 
-        public void ShowOnUI()
+        public string GetUnitName()
         {
-            throw new System.NotImplementedException();
+            return unit.firstName;
+        }
+        
+        public int GetUnitDamage()
+        {
+            return unit.damage;
+        }
+        
+        public int GetUnitArmour()
+        {
+            return unit.armour;
+        }
+        
+        public int GetUnitHealth()
+        {
+            return unit.healthPoint;
+        }
+
+        public Sprite GetUnitSprite()
+        {
+            return unit.sprite;
         }
     }
 }

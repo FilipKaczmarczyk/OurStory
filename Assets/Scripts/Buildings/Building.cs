@@ -84,7 +84,7 @@ namespace Buildings
             selectionCircle.enabled = false;
         }
 
-        public string GetName()
+        public string GetUnitType()
         {
             return "Building";
         }

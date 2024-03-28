@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a45f2174571ea641a45ef721d13f9a3, type: 3}
+  m_Name: Citizen
+  m_EditorClassIdentifier: 
+  type: Citizen
+  firstName: Kamil
+  sprite: {fileID: 21300000, guid: 3f1ee207c5df6b745aa0d06b2bdcdf3c, type: 3}
+  damage: 5
+  armour: 2
+  healthPoint: 100
