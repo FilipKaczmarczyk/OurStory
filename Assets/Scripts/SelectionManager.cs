@@ -75,7 +75,7 @@ public class SelectionManager : MonoBehaviour
     {
         if (_singleSelectedObject != null)
         {
-            //selectionPanel.ShowSingleObject(_singleSelectedObject);
+            selectionPanel.ShowObject(_singleSelectedObject);
         }
         else
         {

@@ -134,6 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c077e39eaa5db584e820bbcc805301f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  building: {fileID: 11400000, guid: fc2ea2355c26d1443a08cda182125e1f, type: 2}
   buildingPhases:
   - {fileID: 4300000, guid: b18013bceef29894d95932ffbdf069c0, type: 3}
   - {fileID: 4300000, guid: 25ef05172876b8742b290e10ba4393cf, type: 3}

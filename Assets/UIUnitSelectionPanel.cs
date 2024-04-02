@@ -26,8 +26,8 @@ public class UIUnitSelectionPanel : MonoBehaviour
 
     private void SetUnitInfoPanel(SelectableUnit unit, int unitCount = 1)
     {
-        unitTypeText.text = unit.GetUnitType();
-        unitImage.sprite = unit.GetUnitSprite();
+        unitTypeText.text = unit.GetObjectType();
+        unitImage.sprite = unit.GetObjectSprite();
         unitArmourText.text = unit.GetUnitArmour().ToString();
         unitDamageText.text = unit.GetUnitDamage().ToString();
         unitHealthText.text = unit.GetUnitHealth().ToString();
@@ -40,11 +40,11 @@ public class UIUnitSelectionPanel : MonoBehaviour
     
     private bool AreUnitsSameType(HashSet<SelectableUnit> selectedUnits)
     {
-        var firstUnitType = selectedUnits.First().GetUnitType();
+        var firstUnitType = selectedUnits.First().GetObjectType();
         
         foreach (var unit in selectedUnits)
         {
-            if (unit.GetUnitType() != firstUnitType)
+            if (unit.GetObjectType() != firstUnitType)
                 return false;
         }
 

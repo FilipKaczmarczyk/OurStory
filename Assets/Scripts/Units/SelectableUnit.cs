@@ -33,11 +33,11 @@ namespace Units
             selectionCircle.enabled = false;
         }
 
-        public string GetUnitType()
+        public string GetObjectType()
         {
             return unit.type;
         }
-
+        
         public string GetUnitName()
         {
             return unit.firstName;
@@ -58,7 +58,7 @@ namespace Units
             return unit.healthPoint;
         }
 
-        public Sprite GetUnitSprite()
+        public Sprite GetObjectSprite()
         {
             return unit.sprite;
         }

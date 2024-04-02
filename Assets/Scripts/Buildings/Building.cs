@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NaughtyAttributes;
+using ScriptableObjects;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,7 @@ namespace Buildings
 {
     public class Building : MonoBehaviour, ISelectable
     {
+        [SerializeField] private BuildingSO building;
         [SerializeField] private List<Mesh> buildingPhases;
         [SerializeField] private int currentPhase;
         [SerializeField] private int buildPointsToComplete;
@@ -84,9 +86,14 @@ namespace Buildings
             selectionCircle.enabled = false;
         }
 
-        public string GetUnitType()
+        public string GetObjectType()
         {
-            return "Building";
+            return building.type;
+        }
+
+        public Sprite GetObjectSprite()
+        {
+            return building.sprite;
         }
     }
 }

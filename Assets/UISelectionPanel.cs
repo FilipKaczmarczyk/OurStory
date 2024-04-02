@@ -8,6 +8,7 @@ public class UISelectionPanel : MonoBehaviour
     [SerializeField] private UIUnitSelectionPanel unitSelectionPanel;
     
     [SerializeField] private GameObject objectPanelHolder;
+    [SerializeField] private UIObjectSelectionPanel objectSelectionPanel;
     
     public void UpdateSelection(HashSet<SelectableUnit> selectedUnits)
     {
@@ -17,7 +18,6 @@ public class UISelectionPanel : MonoBehaviour
             return;
         }
 
-        ShowUnitPanel();
         ShowUnits(selectedUnits);
     }
 
@@ -25,6 +25,12 @@ public class UISelectionPanel : MonoBehaviour
     {
         ShowUnitPanel();
         unitSelectionPanel.SetUnitsSelectionPanel(selectedUnits);
+    }
+
+    public void ShowObject(ISelectable selectable)
+    {
+        ShowObjectsPanel();
+        objectSelectionPanel.SetObjectSelectionPanel(selectable);
     }
 
     private void HidePanels()
